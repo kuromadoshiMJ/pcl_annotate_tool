@@ -37,4 +37,4 @@ window.setGeometry(100, 100, 600, 500)
 window.show()  # IMPORTANT!!!!! Windows are hidden by default.
 
 # Start the event loop.
-app.exec()
+sys.exit(app.exec())
