@@ -1,7 +1,7 @@
 # Point Cloud Annotation Tool #
 ##  Dependencies ##
 ### Anaconda ###
-1. Create a conda environment <br\>
+1. Create a conda environment \
 2. Activate the conda environment
 ### open3d ###
 1. Install the whl file with pip
