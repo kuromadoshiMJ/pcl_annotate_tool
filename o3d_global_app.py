@@ -25,20 +25,33 @@ global_idx = []
 global_points_label = []
 global_current_pyqt_label = 0
 global_change_label_clicked = 0
-global_label_color_dict = {0:[1, 1, 0], 1:[1, 0, 0], 2:[0, 0, 1], 3:[0, 1, 0], 4:[0, 1, 1], 5:[1, 0, 1]}
-global_file_name = ""
+# global_label_color_dict = {0:[1, 1, 0], 1:[1, 0, 0], 2:[0, 0, 1], 3:[0, 1, 0], 4:[0, 1, 1], 5:[1, 0, 1]}
+global_label_color_dict = {0:[0.00, 0.00, 1.00], 1:[1.00, 0.00, 0.00], 2:[0.00, 1.00, 0.00], 3:[1.00, 1.00, 0.00], 4:[0.00, 1.00, 1.00], 5:[0.50, 0.00, 0.50], 6:[0.52, 0.80, 0.92], 7:[0.68, 0.75, 0.00], 8:[0.20, 0.72, 0.39], 9:[1.00, 0.75, 0.79], 10:[0.64, 0.28, 0.34]}
+# global_file_name = ""
 global_file_type = ""
 global_change_file_name_flag = 0
 global_reset_pointcloud_flag = 0
 global_save_file_flag = 0
 global_save_file_name = ""
-global_pcd = o3d.geometry.PointCloud()
-global_orig_pcd = o3d.geometry.PointCloud()
+# global_pcd = o3d.geometry.PointCloud()
+# global_orig_pcd = o3d.geometry.PointCloud()
 global_undo_stack = []
 global_redo_stack = []
 global_undo_flag = 0
 global_redo_flag = 0
 
+# for testing purpose
+global_file_name = "D:/UBCO/pcl_annotate_tool/Palac_Moszna.laz"
+las_pcd = laspy.read(global_file_name)
+las_pcd_points = np.vstack((las_pcd.x, las_pcd.y, las_pcd.z)).transpose()
+las_pcd_colors = np.vstack((las_pcd.red, las_pcd.blue, las_pcd.green)).transpose()
+las_pcd_colors = las_pcd_colors/65535
+global_pcd = o3d.geometry.PointCloud()
+global_orig_pcd = o3d.geometry.PointCloud()
+global_pcd.points = o3d.utility.Vector3dVector(las_pcd_points)
+global_pcd.colors = o3d.utility.Vector3dVector(las_pcd_colors)
+global_orig_pcd.points = o3d.utility.Vector3dVector(las_pcd_points)
+global_orig_pcd.colors = o3d.utility.Vector3dVector(las_pcd_colors)
 class MainWindow(QMainWindow):
     
     def __init__(self) -> None:
@@ -220,10 +233,18 @@ def call_back(v):
             las_pcd = laspy.read(global_file_name)
             las_pcd_points = np.vstack((las_pcd.x, las_pcd.y, las_pcd.z)).transpose()
             las_pcd_colors = np.vstack((las_pcd.red, las_pcd.blue, las_pcd.green)).transpose()
+            # print("colors", las_pcd_colors.shape)
+            # print("max, min", np.amax(las_pcd_colors), np.amin(las_pcd_colors))
+            las_pcd_colors = las_pcd_colors/65535 #converting 16 bit color to [0-1] range
+            # print("points", las_pcd_points.shape)
             global_pcd = o3d.geometry.PointCloud()
             global_orig_pcd = o3d.geometry.PointCloud()
             global_pcd.points = o3d.utility.Vector3dVector(las_pcd_points)
-            global_orig_pcd = o3d.utility.Vector3dVector(las_pcd_points)
+            global_pcd.colors = o3d.utility.Vector3dVector(las_pcd_colors)
+            global_orig_pcd.points = o3d.utility.Vector3dVector(las_pcd_points)
+            global_orig_pcd.colors = o3d.utility.Vector3dVector(las_pcd_colors)
+
+            # global_orig_pcd.cloud = o3d.utility.Vector3dVector()
             
         else:        
             global_pcd = o3d.io.read_point_cloud(global_file_name)
