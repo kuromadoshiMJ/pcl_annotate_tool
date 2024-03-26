@@ -9,4 +9,8 @@
 ### pyqt6 ###
 1. Install pyqt6 with 
 `pip install pyqt6`
+### laspy ###
+1. Install laspy support with
+`python3 -m pip install "laspy[lazrs,laszip]"`
+
 
